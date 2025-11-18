@@ -10,7 +10,10 @@ import {
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 
-const UserScreen = ({navigation}) => {
+  
+
+
+  const UserScreen = ({navigation}) => {
   const [name, setName] = useState(null);
   const [photo, setPhoto] = useState(null);
 
@@ -26,6 +29,24 @@ const UserScreen = ({navigation}) => {
       ]
     );
   };
+
+  const confirmLogout = () => {
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Login' }],
+    });
+  };
+
+  const logout = () => {
+    Alert.alert(
+      "Cerrar sesión",
+      "¿Estás seguro de que deseas cerrar sesión?",
+      [
+        { text: "Cancelar", style: "cancel" },
+        { text: "Cerrar sesión", style: "destructive", onPress: confirmLogout }
+      ]
+    );
+  }
 
   // Abrir galería
   const pickImage = async () => {
@@ -101,7 +122,7 @@ const UserScreen = ({navigation}) => {
         <Text style={styles.saveText}>Guardar cambios</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.logOutButton} onPress={() => navigation.replace('Login')}>
+      <TouchableOpacity style={styles.logOutButton} onPress={logout}>
         <Text style={styles.logOutText}>Cerrar sesión</Text>
       </TouchableOpacity>
     </View>

@@ -4,9 +4,9 @@ import { Text, Title, Card } from 'react-native-paper';
 
 export default function HomeScreen({ navigation }) {
   const options = [
-    { id: '1', name: 'Administrar ejercicios', image: 'https://i.pinimg.com/564x/1c/03/26/1c0326e1f7aa89855ab1677bd023f0ff.jpg', screen: 'Ejercicios' },
-    { id: '2', name: 'Registrar entenamiento', image: 'https://cdn-icons-png.flaticon.com/512/4319/4319322.png', screen: 'Entrenamientos' },
-    { id: '3', name: 'Administrar rutinas', image: 'https://cdn-icons-png.flaticon.com/512/1048/1048947.png',screen: 'Rutinas' },
+    { id: '1', name: 'Administrar ejercicios', image: require('../assets/images/weightlifting.png'), screen: 'Ejercicios' },
+    { id: '2', name: 'Registrar entenamiento', image: require('../assets/images/verify.png'), screen: 'Entrenamientos' },
+    { id: '3', name: 'Administrar rutinas', image: require('../assets/images/checklist.png'),screen: 'Rutinas' },
   ];
 
   const handleOptionPress = (optionId) => {
@@ -22,7 +22,7 @@ export default function HomeScreen({ navigation }) {
     <TouchableOpacity onPress={handleOptionPress.bind(this, item.id)}>
       <Card style={styles.card}>
         <Card.Content style={styles.cardContent}>
-          <Image source={{ uri: item.image }} style={styles.image} />
+          <Image source={item.image} style={styles.image} />
           <Text style={styles.routineName}>{item.name}</Text>
         </Card.Content>
       </Card>
@@ -33,6 +33,8 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
+
+      {/* Boton de perfil */}
       <TouchableOpacity style={styles.circle} onPress={() => navigation.navigate('Perfil')}>
         <Image
           source={{ uri: 'https://cdn-icons-png.flaticon.com/512/1077/1077114.png' }}
@@ -77,6 +79,9 @@ const styles = StyleSheet.create({
   card: {
     marginVertical: 8,
     borderRadius: 8,
+    elevation: 3,
+    padding: 10,
+    backgroundColor: '#ece7e7ff',
   },
   cardContent: {
     flexDirection: 'row',
