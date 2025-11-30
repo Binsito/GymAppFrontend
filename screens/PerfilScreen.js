@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { 
   View, 
   Text, 
@@ -9,13 +9,56 @@ import {
   Alert
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import jwtDecode from 'jwt-decode';
   
 
 
   const UserScreen = ({navigation}) => {
-  const [name, setName] = useState(null);
-  const [photo, setPhoto] = useState(null);
+  const [nombre, setName] = useState(null);
+  const [foto_perfil, setPhoto] = useState(null);
+  
+  // Cargar datos de perfil al montar el componente
+  useEffect(() => {
+  const fetchProfile = async () => {
+    const token = await AsyncStorage.getItem('access_token');
+    const decoded = jwtDecode(token);
+    const id_usuario = parseInt(decoded.sub);
+
+    console.log("ID usuario en perfil:", id_usuario);
+    console.log("Token en perfil:", token);
+
+    if (!token) {
+      alert("Error: no hay token, vuelve a iniciar sesión");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `http://192.168.1.68:8080/usuarios/foto/${id_usuario}`,
+        {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      const blob = await response.blob();
+      const reader = new FileReader();
+      reader.onloadend = () => setPhoto(reader.result);
+      reader.readAsDataURL(blob);
+      
+    } catch (error) {
+      alert('Error al cargar perfil. Por favor, inténtalo de nuevo. ' + error);
+    }
+  };
+
+  fetchProfile();
+}, []);
+
+
 
   // Elegir entre cámara o galería
   const selectImageOption = () => {
@@ -30,11 +73,20 @@ import * as ImagePicker from "expo-image-picker";
     );
   };
 
-  const confirmLogout = () => {
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'Login' }],
-    });
+  const confirmLogout = (navigation) => {
+    try {
+      // 1. Borrar token
+      //await AsyncStorage.removeItem("token");
+
+      // 3. Redirigir a la pantalla Login
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Login" }],
+      });
+
+    } catch (error) {
+      console.log("Error cerrando sesión:", error);
+    }
   };
 
   const logout = () => {
@@ -87,12 +139,47 @@ import * as ImagePicker from "expo-image-picker";
     }
   };
 
-  const saveProfile = () => {
-    console.log("Datos guardados:");
-    console.log("Nombre:", name);
-    console.log("Foto:", photo);
+  const saveProfile = async() => {
+    const token = await AsyncStorage.getItem('access_token');
+    if (!token) {
+      alert("Error: no hay token, vuelve a iniciar sesión");
+      return;
+    }
+    
+    
+    const formData = new FormData();
+    formData.append('nombre', nombre);
+    formData.append('foto_perfil', {
+      uri: foto_perfil,         
+      name: foto_perfil.fileName || 'foto.jpg', 
+      type: foto_perfil.type || 'image/jpeg',   
+    });
+    console.log("Token:", token);
+    console.log("Nombre:", nombre);
+    console.log("Foto de perfil:", foto_perfil);
+    
+    try {
+      const response = await fetch('http://192.168.1.68:8080/usuarios/perfil', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json',
+          'Content-Type': 'multipart/form-data',
+        },
+        body: formData,
+      });
+      const data = await response.json();
+      
+      if(response.status !== 200){
+        alert('Error al guardar perfil: ' + data.error);
+        return;
+      }
+      alert('Perfil guardado exitosamente.');
+    } catch (error) {
+      alert('Error al guardar perfil. Por favor, inténtalo de nuevo.'+ error);
+    }
   };
-
+  
   return (
     <View style={styles.container}>
 
@@ -103,8 +190,8 @@ import * as ImagePicker from "expo-image-picker";
         style={styles.photoContainer} 
         onPress={selectImageOption}
       >
-        {photo ? (
-          <Image source={{ uri: photo }} style={styles.photo} />
+        {foto_perfil ? (
+          <Image source={{ uri: foto_perfil }} style={styles.foto_perfil} />
         ) : (
           <Text style={styles.addPhotoText}>Añadir foto</Text>
         )}
@@ -113,7 +200,7 @@ import * as ImagePicker from "expo-image-picker";
       <Text style={styles.label}>Nombre de perfil:</Text>
       <TextInput
         style={styles.input}
-        value={name}
+        value={nombre}
         onChangeText={setName}
         placeholder="Ingresa tu nombre"
       />
@@ -153,7 +240,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     overflow: "hidden",
   },
-  photo: {
+  foto_perfil: {
     width: "100%",
     height: "100%",
   },

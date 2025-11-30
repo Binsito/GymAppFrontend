@@ -1,15 +1,47 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, TouchableOpacity} from 'react-native';
 import { TextInput, Text,Title } from 'react-native-paper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import jwtDecode from 'jwt-decode';
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = () => {
-    console.log('Login:', email, password);
+  const handleLogin = async() => {
+    //console.log('Login:', email, password);
     // funcion que lleva a la pantalla principal despues de iniciar sesion
-    navigation.replace('Home');
+    if (!email || !password) {
+      alert('Por favor, ingresa correo y contraseña');
+      return;
+    }
+    try {
+      const response = await fetch('http://192.168.1.68:8080/usuarios/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await response.json();
+      if("error" in data){
+        alert('Error de inicio de sesión: ' + data.error);
+        return;
+      }
+      await AsyncStorage.setItem('access_token', data.access_token);
+      console.log('Token almacenado:', data.access_token);
+      const decoded = jwtDecode(data.access_token);
+      const id_usuario = decoded.sub;
+      console.log("ID usuario:", id_usuario);
+      
+      
+      
+      navigation.replace('Home');
+    } catch (error) {
+      //console.error('Error during login:', error);
+      alert('Error durante el inicio de sesión. Por favor, inténtalo de nuevo.');
+      console.log(error);
+    }
   };
 
   return (

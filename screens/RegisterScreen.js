@@ -3,18 +3,49 @@ import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { TextInput, Text,Title } from 'react-native-paper';
 
 export default function RegisterScreen({ navigation }) {
-    const [name, setName] = useState('');
+    const [nombre, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirm, setConfirm] = useState('');
 
+
     const handleRegister = () => {
-        if (password !== confirm) {
+      //console.log('Register:', nombre, email, password, confirm);
+      if (password !== confirm) {
         alert('Las contraseñas no coinciden');
+        //console.log('Las contraseñas no coinciden');
         return;
         }
-        console.log('Registro:',name ,email, password);
-        console.log(`Usuario registrado con éxito \nNombre: ${name}\nCorreo: ${email}\nPassword: ${password}`);
+      if (!nombre || !email || !password) {
+        alert('Por favor, completa todos los campos');
+        return;
+      }
+
+      try {
+        fetch('http://192.168.1.68:8080/usuarios/registrar', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ nombre, email, password }),
+        })
+        .then(response => response.json())
+        .then(data => {
+          if("error" in data){
+            alert('Error de registro: ' + data.error);
+            return;
+          }
+          alert('Registro exitoso. Ahora puedes iniciar sesión.');
+          navigation.replace('Login');
+        })
+        .catch((error) => {
+          //console.error('Error:', error);
+        });
+      } catch (error) {
+        //console.error('Error en el registro:', error);
+        alert('Error durante el registro. Por favor, inténtalo de nuevo.');
+      }
+
   };
 
   return (
@@ -23,7 +54,7 @@ export default function RegisterScreen({ navigation }) {
 
       <TextInput
         label="Nombre completo"
-        value={name}
+        value={nombre}
         onChangeText={setName}
         mode="outlined"
         style={styles.input}
