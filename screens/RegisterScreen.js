@@ -56,7 +56,7 @@ export default function RegisterScreen({ navigation }) {
         label="Nombre completo"
         value={nombre}
         onChangeText={setName}
-        mode="outlined"
+        mode="flat"
         style={styles.input}
       />
 
@@ -64,7 +64,7 @@ export default function RegisterScreen({ navigation }) {
         label="Correo electrónico"
         value={email}
         onChangeText={setEmail}
-        mode="outlined"
+        mode="flat"
         style={styles.input}
       />
 
@@ -72,7 +72,7 @@ export default function RegisterScreen({ navigation }) {
         label="Contraseña"
         value={password}
         onChangeText={setPassword}
-        mode="outlined"
+        mode="flat"
         secureTextEntry
         style={styles.input}
       />
@@ -81,7 +81,7 @@ export default function RegisterScreen({ navigation }) {
         label="Confirmar contraseña"
         value={confirm}
         onChangeText={setConfirm}
-        mode="outlined"
+        mode="flat"
         secureTextEntry
         style={styles.input}
       />
@@ -106,14 +106,18 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: '#2e2d2dff',
   },
   title: {
     textAlign: 'center',
     marginBottom: 30,
+    color: 'white',
+    fontSize: 24,
+    fontWeight: 'bold',
   },
   input: {
     marginBottom: 15,
+    backgroundColor: 'white',
   },
   button: {
     marginTop: 10,

@@ -24,10 +24,6 @@ import jwtDecode from 'jwt-decode';
     const token = await AsyncStorage.getItem('access_token');
     const decoded = jwtDecode(token);
     const id_usuario = parseInt(decoded.sub);
-
-    console.log("ID usuario en perfil:", id_usuario);
-    console.log("Token en perfil:", token);
-
     if (!token) {
       alert("Error: no hay token, vuelve a iniciar sesión");
       return;
@@ -73,21 +69,25 @@ import jwtDecode from 'jwt-decode';
     );
   };
 
-  const confirmLogout = (navigation) => {
+  const confirmLogout = async(navigation) => {
     try {
       // 1. Borrar token
-      //await AsyncStorage.removeItem("token");
+      
 
-      // 3. Redirigir a la pantalla Login
+      await AsyncStorage.removeItem("access_token");
+      // AsyncStorage.removeItem("access_token");
+
+      // 2. Redirigir a Login
       navigation.reset({
         index: 0,
         routes: [{ name: "Login" }],
       });
-
     } catch (error) {
-      console.log("Error cerrando sesión:", error);
+      alert("Error cerrando sesión:", error);
     }
   };
+
+
 
   const logout = () => {
     Alert.alert(
@@ -95,7 +95,7 @@ import jwtDecode from 'jwt-decode';
       "¿Estás seguro de que deseas cerrar sesión?",
       [
         { text: "Cancelar", style: "cancel" },
-        { text: "Cerrar sesión", style: "destructive", onPress: confirmLogout }
+        { text: "Cerrar sesión", style: "destructive", onPress: () => confirmLogout(navigation) }
       ]
     );
   }
@@ -154,12 +154,9 @@ import jwtDecode from 'jwt-decode';
       name: foto_perfil.fileName || 'foto.jpg', 
       type: foto_perfil.type || 'image/jpeg',   
     });
-    console.log("Token:", token);
-    console.log("Nombre:", nombre);
-    console.log("Foto de perfil:", foto_perfil);
     
     try {
-      const response = await fetch('http://192.168.1.68:8080/usuarios/perfil', {
+      const response = await fetch('http://192.168.1.68:8080/usuarios/actualizar', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -203,6 +200,8 @@ import jwtDecode from 'jwt-decode';
         value={nombre}
         onChangeText={setName}
         placeholder="Ingresa tu nombre"
+        placeholderTextColor="#888"
+        color="#fff"
       />
 
       <TouchableOpacity style={styles.saveButton} onPress={saveProfile}>
@@ -222,13 +221,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 25,
-    backgroundColor: "#fff",
+    backgroundColor: "#2e2d2dff",
     alignItems: "center",
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 25,
+    color: "#ffffff",
   },
   photoContainer: {
     width: 130,
@@ -253,6 +253,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 5,
     fontWeight: "600",
+    color: "#ffffff",
   },
   input: {
     width: "100%",
@@ -262,6 +263,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 20,
     fontSize: 16,
+    backgroundColor: "#444343ff",
+    
   },
   saveButton: {
     backgroundColor: "#4A90E2",

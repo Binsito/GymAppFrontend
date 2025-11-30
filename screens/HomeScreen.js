@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { use, useEffect, useState } from "react";
 import { View, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native';
 import { Text, Title, Card } from 'react-native-paper';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function HomeScreen({ navigation }) {
   const options = [
@@ -8,6 +9,37 @@ export default function HomeScreen({ navigation }) {
     { id: '2', name: 'Registrar entenamiento', image: require('../assets/images/verify.png'), screen: 'Entrenamientos' },
     { id: '3', name: 'Administrar rutinas', image: require('../assets/images/checklist.png'),screen: 'Rutinas' },
   ];
+   const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const token = await AsyncStorage.getItem('access_token');
+        if (!token) {
+          Alert.alert("Error", "No hay token, vuelve a iniciar sesión");
+          return;
+        }
+
+        const response = await fetch('http://192.168.1.68:8080/usuarios/datos', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        const data = await response.json();
+        setUser(data.datos);
+        //console.log("Datos de usuario en HomeScreen:", data);
+      } catch (error) {
+        Alert.alert("Error", "Error al cargar datos de usuario. Por favor, inténtalo de nuevo. " + error);
+      }
+    };
+
+    fetchUser();
+  }, []);
+  
+      
 
   const handleOptionPress = (optionId) => {
     // manejar la navegación según la opción seleccionada
@@ -22,7 +54,10 @@ export default function HomeScreen({ navigation }) {
     <TouchableOpacity onPress={handleOptionPress.bind(this, item.id)}>
       <Card style={styles.card}>
         <Card.Content style={styles.cardContent}>
-          <Image source={item.image} style={styles.image} />
+          <View style={styles.imageContainer}>
+            <Image source={item.image} style={styles.image} />
+          </View>
+          
           <Text style={styles.routineName}>{item.name}</Text>
         </Card.Content>
       </Card>
@@ -42,7 +77,9 @@ export default function HomeScreen({ navigation }) {
         />
       </TouchableOpacity>
 
-      <Title style={styles.title}>🏋️Bienvenido💪</Title>
+      <Title style={styles.title}>
+        {user ? `🏋️Bienvenido ${user.nombre}💪`:'Cargando...'}
+      </Title>
       
       <FlatList
         data={options}
@@ -51,10 +88,6 @@ export default function HomeScreen({ navigation }) {
         contentContainerStyle={styles.list}
       />
       
-      
-      {/* <TouchableOpacity onPress={() => navigation.replace('Login')}>
-        <Text style={styles.logoutButton}>Cerrar sesión</Text>
-      </TouchableOpacity> */}
     </View>
   );
 }
@@ -62,7 +95,7 @@ export default function HomeScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#2e2d2dff',
     padding: 20,
   },
   title: {
@@ -71,6 +104,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
     top: 70,
+    color: '#ffffff',
   },
   list: {
     paddingBottom: 0,
@@ -81,7 +115,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     elevation: 3,
     padding: 10,
-    backgroundColor: '#ece7e7ff',
+    backgroundColor: '#1E88E5',
   },
   cardContent: {
     flexDirection: 'row',
@@ -90,11 +124,27 @@ const styles = StyleSheet.create({
   routineName: {
     marginLeft: 15,
     fontSize: 16,
+    fontWeight: 'bold',
+    color: '#ffffff',
+  },
+  imageContainer: {
+    width: 70,
+    height: 70,
+    borderRadius: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: '#ffffff',
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOpacity: 0.4,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 3,
+
   },
   image: {
     width: 50,
     height: 50,
-    borderRadius: 20,
+    borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
     elevation: 5, 
@@ -102,11 +152,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.4,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 3,
+    backgroundColor: '#ffffff',
   },
   circle: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
     backgroundColor: "#535456ff",
     justifyContent: "center",
     alignItems: "center",

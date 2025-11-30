@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity} from 'react-native';
-import { TextInput, Text,Title } from 'react-native-paper';
+import { View, StyleSheet, TouchableOpacity,Image} from 'react-native';
+import { TextInput, Text,Title} from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import jwtDecode from 'jwt-decode';
 
@@ -46,13 +46,15 @@ export default function LoginScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
+      <Image source={require('../assets/images/logo.png')} style={{ width: 100, height: 100, alignSelf: 'center', marginBottom: 20,marginTop:80,tintColor:"white" }} />
+      
       <Title style={styles.title}>GymApp</Title>
 
       <TextInput
         label="Correo electrónico"
         value={email}
         onChangeText={setEmail}
-        mode="outlined"
+        mode="flat"
         style={styles.input}
       />
 
@@ -60,7 +62,7 @@ export default function LoginScreen({ navigation }) {
         label="Contraseña"
         value={password}
         onChangeText={setPassword}
-        mode="outlined"
+        mode="flat"
         secureTextEntry
         style={styles.input}
       />
@@ -83,19 +85,20 @@ export default function LoginScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     padding: 20,
-    backgroundColor: '#ffffffff',
+    backgroundColor: '#2e2d2dff',
   },
   title: {
     textAlign: 'center',
     marginBottom: 30,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: '',
     fontSize: 32,
-
+    color: 'white',
   },
   input: {
     marginBottom: 15,
+    backgroundColor: 'white',
   },
   button: {
     marginTop: 10,
