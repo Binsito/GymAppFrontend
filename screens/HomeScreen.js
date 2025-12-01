@@ -21,7 +21,7 @@ export default function HomeScreen({ navigation }) {
           return;
         }
 
-        const response = await fetch('http://192.168.1.68:8080/usuarios/datos', {
+        const response = await fetch('https://dispmovilbackend.onrender.com/usuarios/datos', {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -129,8 +129,8 @@ const styles = StyleSheet.create({
     color: '#ffffff',
   },
   imageContainer: {
-    width: 70,
-    height: 70,
+    width: 60,
+    height: 60,
     borderRadius: 40,
     justifyContent: "center",
     alignItems: "center",
@@ -143,8 +143,8 @@ const styles = StyleSheet.create({
 
   },
   image: {
-    width: 50,
-    height: 50,
+    width: 45,
+    height: 45,
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",

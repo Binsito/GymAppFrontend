@@ -31,7 +31,7 @@ import jwtDecode from 'jwt-decode';
 
     try {
       const response = await fetch(
-        `http://192.168.1.68:8080/usuarios/foto/${id_usuario}`,
+        `https://dispmovilbackend.onrender.com/usuarios/foto/${id_usuario}`,
         {
           method: 'GET',
           headers: {
@@ -156,7 +156,7 @@ import jwtDecode from 'jwt-decode';
     });
     
     try {
-      const response = await fetch('http://192.168.1.68:8080/usuarios/actualizar', {
+      const response = await fetch('https://dispmovilbackend.onrender.com/usuarios/actualizar', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

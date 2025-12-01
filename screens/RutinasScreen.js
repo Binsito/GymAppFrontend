@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const API_URL = "http://192.168.1.68:8080/rutinas";
+const API_URL = "https://dispmovilbackend.onrender.com/rutinas";
 
 const RutinasScreen = () => {
   const [rutinas, setRutinas] = useState([]);

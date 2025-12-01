@@ -11,6 +11,8 @@ import EntrenamientoScreen from './screens/EntrenamientoScreen';
 import EjerciciosScreen from './screens/EjerciciosScreen';
 import PerfilScreen from './screens/PerfilScreen';
 import ResultsScreen from './screens/ResultsScreen';
+import RegRutinaScreen from './screens/RegRutinaScreen';
+import ResEjerScreen from './screens/ResEjerScreen';
 
 const Stack = createStackNavigator();
 
@@ -34,6 +36,8 @@ export default function App() {
           <Stack.Screen name="Ejercicios" component={EjerciciosScreen} />
           <Stack.Screen name="Perfil" component={PerfilScreen} />
           <Stack.Screen name="Results" component={ResultsScreen} />
+          <Stack.Screen name="RegRutinaScreen" component={RegRutinaScreen}/>
+          <Stack.Screen name="ResEjerScreen" component={ResEjerScreen}/>
 
 
         </Stack.Navigator>

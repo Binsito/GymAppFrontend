@@ -22,7 +22,7 @@ export default function RegisterScreen({ navigation }) {
       }
 
       try {
-        fetch('http://192.168.1.68:8080/usuarios/registrar', {
+        fetch('https://dispmovilbackend.onrender.com/usuarios/registrar', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

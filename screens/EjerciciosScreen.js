@@ -4,7 +4,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const API_URL = "http://192.168.1.68:8080/ejercicios"; 
+const API_URL = "https://dispmovilbackend.onrender.com/ejercicios"; 
 
 const EjerciciosScreen = () => {
   const [ejercicios, setEjercicios] = useState([]);

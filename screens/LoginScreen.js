@@ -16,7 +16,7 @@ export default function LoginScreen({ navigation }) {
       return;
     }
     try {
-      const response = await fetch('http://192.168.1.68:8080/usuarios/login', {
+      const response = await fetch('https://dispmovilbackend.onrender.com/usuarios/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
