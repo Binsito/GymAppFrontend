@@ -8,6 +8,7 @@ export default function HomeScreen({ navigation }) {
     { id: '1', name: 'Administrar ejercicios', image: require('../assets/images/weightlifting.png'), screen: 'Ejercicios' },
     { id: '2', name: 'Registrar entenamiento', image: require('../assets/images/verify.png'), screen: 'Entrenamientos' },
     { id: '3', name: 'Administrar rutinas', image: require('../assets/images/checklist.png'),screen: 'Rutinas' },
+    { id: '4', name: 'Ver resultados', image: require('../assets/images/rising.png'), screen: 'Results' },
   ];
    const [user, setUser] = useState(null);
 

@@ -10,6 +10,7 @@ import RutinasScreen from './screens/RutinasScreen';
 import EntrenamientoScreen from './screens/EntrenamientoScreen';
 import EjerciciosScreen from './screens/EjerciciosScreen';
 import PerfilScreen from './screens/PerfilScreen';
+import ResultsScreen from './screens/ResultsScreen';
 
 const Stack = createStackNavigator();
 
@@ -32,6 +33,8 @@ export default function App() {
           <Stack.Screen name="Entrenamientos" component={EntrenamientoScreen} />
           <Stack.Screen name="Ejercicios" component={EjerciciosScreen} />
           <Stack.Screen name="Perfil" component={PerfilScreen} />
+          <Stack.Screen name="Results" component={ResultsScreen} />
+
 
         </Stack.Navigator>
       </NavigationContainer>
